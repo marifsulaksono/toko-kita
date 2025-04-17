@@ -1,0 +1,6 @@
+logs/
+config.yaml
+.env
+.DS_Store
+*.txt
+*.pem
