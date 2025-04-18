@@ -54,6 +54,13 @@ func (r *itemRepository) GetById(ctx context.Context, id uuid.UUID) (data *model
 		}
 		return nil, response.NewCustomError(http.StatusInternalServerError, "Terjadi kesalahan pada server", err)
 	}
+
+	var stock int
+	for _, batch := range data.StockBatchItems {
+		stock += batch.RemainingQty
+	}
+	data.Stock = stock
+
 	return
 }
 

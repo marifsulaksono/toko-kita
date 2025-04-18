@@ -77,6 +77,10 @@ func (r *stockBatchRepository) Get(ctx context.Context, params *model.GetStockBa
 		return nil, 0, err
 	}
 
+	for i := range data {
+		data[i].ItemName = data[i].Item.Name
+	}
+
 	return
 }
 

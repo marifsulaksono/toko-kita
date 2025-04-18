@@ -21,7 +21,8 @@ type (
 	StockBatchItem struct {
 		ID             uuid.UUID `json:"id" gorm:"primaryKey;type:varchar(36)"`
 		ItemID         uuid.UUID `json:"item_id" gorm:"type:uuid;not null"`
-		Item           Item      `json:"item" gorm:"foreignKey:ItemID;references:ID"`
+		Item           Item      `json:"-" gorm:"foreignKey:ItemID;references:ID"`
+		ItemName       string    `json:"item_name,omitempty" gorm:"-:migration"`
 		SupplierID     uuid.UUID `json:"supplier_id" gorm:"type:uuid;not null"`
 		Supplier       Supplier  `json:"supplier" gorm:"foreignKey:SupplierID;references:ID"`
 		BatchNo        string    `json:"batch_no" gorm:"type:varchar(50);not null"`
