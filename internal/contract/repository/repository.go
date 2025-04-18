@@ -13,6 +13,7 @@ type Contract struct {
 	Auth     interfaces.AuthRepository
 	Role     interfaces.RoleRepository
 	Supplier interfaces.SupplierRepository
+	Item     interfaces.ItemRepository
 }
 
 func NewRepository(ctx context.Context, common *common.Contract) (*Contract, error) {
@@ -20,11 +21,13 @@ func NewRepository(ctx context.Context, common *common.Contract) (*Contract, err
 	user := repository.NewUserRepository(common.DB)
 	auth := repository.NewAuthRepository(common.DB)
 	supplier := repository.NewSupplierRepository(common.DB)
+	item := repository.NewItemRepository(common.DB)
 
 	return &Contract{
 		User:     user,
 		Auth:     auth,
 		Role:     role,
 		Supplier: supplier,
+		Item:     item,
 	}, nil
 }
