@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/model"
+	"github.com/marifsulaksono/go-echo-boilerplate/internal/pkg/helper"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/pkg/utils/response"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/repository/interfaces"
 	"gorm.io/gorm"
@@ -66,7 +67,7 @@ func (r *stockBatchRepository) Get(ctx context.Context, params *model.GetStockBa
 				"%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%")
 	}
 
-	err = db.Preload("Item").Preload("Supplier").Offset(offset).Limit(params.Limit).Find(&data).Error
+	err = db.Preload("Item").Preload("Supplier").Offset(offset).Limit(params.Limit).Order("purchased_at ASC").Find(&data).Error
 	if err != nil {
 		return nil, 0, err
 	}
@@ -74,6 +75,20 @@ func (r *stockBatchRepository) Get(ctx context.Context, params *model.GetStockBa
 	err = r.DB.Model(&model.StockBatchItem{}).Where("deleted_at IS NULL").Count(&total).Error
 	if err != nil {
 		return nil, 0, err
+	}
+
+	return
+}
+
+func (r *stockBatchRepository) GetByItemID(ctx context.Context, itemID string, isShowZeroStock bool) (data []model.StockBatchItem, err error) {
+	db := r.DB.WithContext(ctx)
+
+	if isShowZeroStock {
+		db = db.Where("remaining_qty > 0")
+	}
+	err = db.Where("item_id = ? AND deleted_at IS NULL", itemID).Preload("Item").Order("purchased_at ASC").Find(&data).Error
+	if err != nil {
+		return nil, err
 	}
 
 	return
@@ -164,6 +179,32 @@ func (r *stockBatchRepository) Update(ctx context.Context, payload *model.StockB
 	existingStockBatch.UpdatedBy = payload.UpdatedBy
 
 	if err := r.DB.Save(&existingStockBatch).Error; err != nil {
+		return response.NewCustomError(http.StatusInternalServerError, "Gagal mengupdate stock batch", err)
+	}
+
+	return nil
+
+}
+
+func (r *stockBatchRepository) UpdateStock(ctx context.Context, id uuid.UUID, finalQty int) (err error) {
+	userID, ok := ctx.Value("user_id").(string)
+	if !ok {
+		userID = ""
+	}
+
+	db := helper.GetTx(ctx, r.DB)
+	var existingStockBatch model.StockBatchItem
+	if err := db.Where("id = ?", id).First(&existingStockBatch).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return response.NewCustomError(http.StatusNotFound, "Stock batch tidak ditemukan", err)
+		}
+		return response.NewCustomError(http.StatusInternalServerError, "Gagal mengambil data item", err)
+	}
+
+	existingStockBatch.RemainingQty = finalQty
+	existingStockBatch.UpdatedBy = userID
+
+	if err := db.Save(&existingStockBatch).Error; err != nil {
 		return response.NewCustomError(http.StatusInternalServerError, "Gagal mengupdate stock batch", err)
 	}
 

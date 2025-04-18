@@ -41,6 +41,9 @@ func (c *Contract) AutoMigrate() {
 		&model.Supplier{},
 		&model.Item{},
 		&model.StockBatchItem{},
+		&model.Sale{},
+		&model.SalesDetail{},
+		&model.SalesBatchItemDetail{},
 	); err != nil {
 		log.Fatalf("Error on migration database: %v", err)
 	}

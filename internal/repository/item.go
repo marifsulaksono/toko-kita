@@ -50,7 +50,7 @@ func (r *itemRepository) GetById(ctx context.Context, id uuid.UUID) (data *model
 	err = r.DB.Preload("StockBatchItems").Preload("StockBatchItems.Item").Preload("StockBatchItems.Supplier").Where("id = ?", id).First(&data, id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, response.NewCustomError(http.StatusNotFound, "Data tidak ditemukan", nil)
+			return nil, response.NewCustomError(http.StatusNotFound, "Data item tidak ditemukan", nil)
 		}
 		return nil, response.NewCustomError(http.StatusInternalServerError, "Terjadi kesalahan pada server", err)
 	}

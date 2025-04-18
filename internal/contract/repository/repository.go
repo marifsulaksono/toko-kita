@@ -15,6 +15,7 @@ type Contract struct {
 	Supplier   interfaces.SupplierRepository
 	Item       interfaces.ItemRepository
 	StockBatch interfaces.StockBatchRepository
+	Sale       interfaces.SaleRepository
 }
 
 func NewRepository(ctx context.Context, common *common.Contract) (*Contract, error) {
@@ -24,6 +25,7 @@ func NewRepository(ctx context.Context, common *common.Contract) (*Contract, err
 	supplier := repository.NewSupplierRepository(common.DB)
 	item := repository.NewItemRepository(common.DB)
 	stockBatch := repository.NewStockBatchRepository(common.DB)
+	sale := repository.NewSaleRepository(common.DB)
 
 	return &Contract{
 		User:       user,
@@ -32,5 +34,6 @@ func NewRepository(ctx context.Context, common *common.Contract) (*Contract, err
 		Supplier:   supplier,
 		Item:       item,
 		StockBatch: stockBatch,
+		Sale:       sale,
 	}, nil
 }

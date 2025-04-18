@@ -30,7 +30,7 @@ func NewContract(ctx context.Context) (*Contract, error) {
 		return nil, err
 	}
 
-	service, err := service.NewService(ctx, repository)
+	service, err := service.NewService(ctx, repository, common)
 	if err != nil {
 		return nil, err
 	}
