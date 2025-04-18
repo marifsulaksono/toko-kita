@@ -37,6 +37,8 @@ func (c *Contract) AutoMigrate() {
 	if err := c.DB.AutoMigrate(
 		&model.User{},
 		&model.TokenAuth{},
+		&model.Role{},
+		&model.Supplier{},
 	); err != nil {
 		log.Fatalf("Error on migration database: %v", err)
 	}

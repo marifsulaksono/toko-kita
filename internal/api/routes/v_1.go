@@ -9,6 +9,7 @@ func RouteV1(av *APIVersion) {
 	userController := controller.NewUserController(av.contract.Service.User)
 	authController := controller.NewAuthController(av.contract.Service.Auth)
 	roleController := controller.NewRoleController(av.contract.Service.Role)
+	supplierController := controller.NewSupplierController(av.contract.Service.Supplier)
 
 	av.api.Use(middleware.LogMiddleware) // use middleware logger
 
@@ -16,7 +17,7 @@ func RouteV1(av *APIVersion) {
 	auth := av.api.Group("/auth")
 
 	auth.POST("/login", authController.Login, middleware.RateLimitMiddleware(5, 300)) // limit to 5 requests per 5 minutes
-	auth.POST("/new-access-token", authController.RefreshAccessToken)
+	auth.POST("/refresh", authController.RefreshAccessToken)
 	auth.POST("/logout", authController.Logout)
 
 	// user routes
@@ -38,4 +39,14 @@ func RouteV1(av *APIVersion) {
 	role.POST("", roleController.Create)
 	role.PUT("/:id", roleController.Update)
 	role.DELETE("/:id", roleController.Delete)
+
+	// role routes
+	supplier := av.api.Group("/suppliers")
+	supplier.Use(middleware.JWTMiddleware()) // use middleware jwt general on supplier routes
+
+	supplier.GET("", supplierController.Get)
+	supplier.GET("/:id", supplierController.GetById)
+	supplier.POST("", supplierController.Create)
+	supplier.PUT("/:id", supplierController.Update)
+	supplier.DELETE("/:id", supplierController.Delete)
 }

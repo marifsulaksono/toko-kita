@@ -9,19 +9,22 @@ import (
 )
 
 type Contract struct {
-	User interfaces.UserService
-	Auth interfaces.AuthService
-	Role interfaces.RoleService
+	User     interfaces.UserService
+	Auth     interfaces.AuthService
+	Role     interfaces.RoleService
+	Supplier interfaces.SupplierService
 }
 
 func NewService(ctx context.Context, r *repository.Contract) (*Contract, error) {
 	user := service.NewUserService(r)
 	auth := service.NewAuthService(r)
 	role := service.NewRoleService(r)
+	supplier := service.NewSupplierService(r)
 
 	return &Contract{
-		User: user,
-		Auth: auth,
-		Role: role,
+		User:     user,
+		Auth:     auth,
+		Role:     role,
+		Supplier: supplier,
 	}, nil
 }
