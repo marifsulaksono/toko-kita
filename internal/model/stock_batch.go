@@ -8,6 +8,16 @@ import (
 )
 
 type (
+	GetStockBatchRequest struct {
+		Page       int    `json:"page"`
+		Limit      int    `json:"limit"`
+		Search     string `json:"search"`
+		ItemID     string `json:"item_id"`
+		SupplierID string `json:"supplier_id"`
+		StartDate  string `json:"start_date"`
+		EndDate    string `json:"end_date"`
+	}
+
 	StockBatchItem struct {
 		ID             uuid.UUID `json:"id" gorm:"primaryKey;type:varchar(36)"`
 		ItemID         uuid.UUID `json:"item_id" gorm:"type:uuid;not null"`

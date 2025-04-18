@@ -38,7 +38,7 @@ func (r *itemRepository) Get(ctx context.Context, params *model.GetItemRequest) 
 		return nil, 0, err
 	}
 
-	err = r.DB.Model(&model.User{}).Where("deleted_at IS NULL").Count(&total).Error
+	err = r.DB.Model(&model.Item{}).Where("deleted_at IS NULL").Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}

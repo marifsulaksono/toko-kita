@@ -11,6 +11,7 @@ func RouteV1(av *APIVersion) {
 	roleController := controller.NewRoleController(av.contract.Service.Role)
 	supplierController := controller.NewSupplierController(av.contract.Service.Supplier)
 	itemController := controller.NewItemController(av.contract.Service.Item)
+	purchaseController := controller.NewPurchaseController(av.contract.Service.Purchase)
 
 	av.api.Use(middleware.LogMiddleware) // use middleware logger
 
@@ -60,4 +61,13 @@ func RouteV1(av *APIVersion) {
 	item.POST("", itemController.Create)
 	item.PUT("/:id", itemController.Update)
 	item.DELETE("/:id", itemController.Delete)
+
+	// purchase routes
+	purchase := av.api.Group("/purchases")
+	purchase.Use(middleware.JWTMiddleware()) // use middleware jwt general on purchase routes
+
+	purchase.GET("", purchaseController.Get)
+	purchase.POST("", purchaseController.CreateBulk)
+	purchase.PUT("/:id", purchaseController.Update)
+	purchase.DELETE("/:id", purchaseController.Delete)
 }

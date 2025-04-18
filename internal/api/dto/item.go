@@ -1,9 +1,6 @@
 package dto
 
 import (
-	"time"
-
-	"github.com/google/uuid"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/model"
 )
 
@@ -18,7 +15,7 @@ type (
 		SKU             string           `json:"sku" validate:"required,lte=25"`
 		Name            string           `json:"name" validate:"required,lte=255"`
 		Unit            string           `json:"unit" validate:"required,lte=255"`
-		SellingPrice    float64          `json:"selling_price" validate:"required"`
+		SellingPrice    float64          `json:"selling_price" validate:"required,gte=0"`
 		StockBatchItems []StockBatchItem `json:"stock_batch_items"`
 	}
 
@@ -26,16 +23,7 @@ type (
 		SKU          string  `json:"sku" validate:"required,lte=25"`
 		Name         string  `json:"name" validate:"required,lte=255"`
 		Unit         string  `json:"unit" validate:"required,lte=255"`
-		SellingPrice float64 `json:"selling_price" validate:"required"`
-	}
-
-	StockBatchItem struct {
-		ItemID         uuid.UUID `json:"item_id"`
-		SupplierID     uuid.UUID `json:"supplier_id" validate:"required"`
-		BatchNo        string    `json:"batch_no" validate:"required,lte=50"`
-		PurchasedPrice float64   `json:"purchased_price" validate:"required"`
-		PurchasedQty   int       `json:"purchased_qty" validate:"required"`
-		PurchasedAt    time.Time `json:"purchased_at" validate:"required"`
+		SellingPrice float64 `json:"selling_price" validate:"required,gte=0"`
 	}
 )
 

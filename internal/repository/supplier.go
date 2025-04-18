@@ -37,7 +37,7 @@ func (r *supplierRepository) Get(ctx context.Context, params *model.GetSupplierR
 		return nil, 0, err
 	}
 
-	err = r.DB.Model(&model.User{}).Where("deleted_at IS NULL").Count(&total).Error
+	err = r.DB.Model(&model.Supplier{}).Where("deleted_at IS NULL").Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
@@ -75,6 +75,14 @@ func (r *supplierRepository) Update(ctx context.Context, payload *model.Supplier
 		payload.UpdatedBy = ""
 	} else {
 		payload.UpdatedBy = userID
+	}
+
+	var existingItem model.Supplier
+	if err := r.DB.Where("id = ?", id).First(&existingItem).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return response.NewCustomError(http.StatusNotFound, "Supplier tidak ditemukan", err)
+		}
+		return response.NewCustomError(http.StatusInternalServerError, "Gagal mengambil data item", err)
 	}
 
 	err = r.DB.Model(&model.Supplier{}).Where("id = ?", id).Updates(payload).Error

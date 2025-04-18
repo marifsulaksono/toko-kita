@@ -9,11 +9,12 @@ import (
 )
 
 type Contract struct {
-	User     interfaces.UserRepository
-	Auth     interfaces.AuthRepository
-	Role     interfaces.RoleRepository
-	Supplier interfaces.SupplierRepository
-	Item     interfaces.ItemRepository
+	User       interfaces.UserRepository
+	Auth       interfaces.AuthRepository
+	Role       interfaces.RoleRepository
+	Supplier   interfaces.SupplierRepository
+	Item       interfaces.ItemRepository
+	StockBatch interfaces.StockBatchRepository
 }
 
 func NewRepository(ctx context.Context, common *common.Contract) (*Contract, error) {
@@ -22,12 +23,14 @@ func NewRepository(ctx context.Context, common *common.Contract) (*Contract, err
 	auth := repository.NewAuthRepository(common.DB)
 	supplier := repository.NewSupplierRepository(common.DB)
 	item := repository.NewItemRepository(common.DB)
+	stockBatch := repository.NewStockBatchRepository(common.DB)
 
 	return &Contract{
-		User:     user,
-		Auth:     auth,
-		Role:     role,
-		Supplier: supplier,
-		Item:     item,
+		User:       user,
+		Auth:       auth,
+		Role:       role,
+		Supplier:   supplier,
+		Item:       item,
+		StockBatch: stockBatch,
 	}, nil
 }
