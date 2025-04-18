@@ -16,6 +16,12 @@ type (
 		EndDate   string `json:"end_date" query:"end_date" validate:"datetime=2006-01-02"`
 	}
 
+	GetMonthlySalesReport struct {
+		ItemID uuid.UUID `json:"item_id" query:"item_id"`
+		Month  int       `json:"month" query:"month"`
+		Year   int       `json:"year" query:"year"`
+	}
+
 	SaleRequest struct {
 		CustomerName string        `json:"customer_name"`
 		Date         time.Time     `json:"date" validate:"required"`
@@ -35,6 +41,14 @@ func (s *GetSaleRequest) ParseToModel() *model.GetSaleRequest {
 		Search:    s.Search,
 		StartDate: s.StartDate,
 		EndDate:   s.EndDate,
+	}
+}
+
+func (s *GetMonthlySalesReport) ParseToModel() *model.GetMonthlySalesReport {
+	return &model.GetMonthlySalesReport{
+		ItemID: s.ItemID,
+		Month:  s.Month,
+		Year:   s.Year,
 	}
 }
 

@@ -78,6 +78,7 @@ func RouteV1(av *APIVersion) {
 
 	sale.GET("", saleController.Get)
 	sale.GET("/:id", saleController.GetById)
+	sale.GET("/report", saleController.GetMonthlySalesReport)
 	sale.POST("", saleController.Create)
 	sale.DELETE("/:id", saleController.Delete)
 }

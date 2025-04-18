@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -116,4 +117,43 @@ func (r *saleRepository) Delete(ctx context.Context, id uuid.UUID) (err error) {
 	}
 
 	return nil
+}
+
+func (r *saleRepository) GetMonthlySalesReport(ctx context.Context, params *model.GetMonthlySalesReport) (result model.MonthlySalesReport, err error) {
+
+	fmt.Println("Month:", params.Month)
+	fmt.Println("Year:", params.Year)
+
+	query := r.DB.WithContext(ctx).Debug().Table("sales s").
+		Select(`
+			EXTRACT(MONTH FROM s.date) AS month,
+			EXTRACT(YEAR FROM s.date) AS year,
+			SUM(sd.qty * sd.selling_price) AS total_sales,
+			SUM(sbid.qty * sbid.purchased_price) AS total_hpp,
+			SUM(sd.qty * sd.selling_price) - SUM(sbid.qty * sbid.purchased_price) AS profit
+		`).
+		Joins("JOIN sales_details sd ON sd.sale_id = s.id").
+		Joins("JOIN sales_batch_item_details sbid ON sbid.sales_detail_id = sd.id")
+
+	// filter by ItemID
+	if params.ItemID != uuid.Nil {
+		query = query.Where("item_id = ?", params.ItemID)
+	}
+
+	// filter by Month
+	if params.Month > 0 {
+		query = query.Where("CAST(EXTRACT(MONTH FROM s.date) AS INT) = ?", params.Month)
+	}
+
+	// filter by Year
+	if params.Year > 0 {
+		query = query.Where("CAST(EXTRACT(YEAR FROM s.date) AS INT) = ?", params.Year)
+	}
+
+	err = query.Group("1, 2").Order("1, 2").Scan(&result).Error
+	if err != nil {
+		return model.MonthlySalesReport{}, err
+	}
+
+	return result, nil
 }

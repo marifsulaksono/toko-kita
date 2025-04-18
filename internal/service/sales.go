@@ -130,3 +130,7 @@ func (s *saleService) Create(ctx context.Context, data *model.Sale) (err error) 
 func (s *saleService) Delete(ctx context.Context, id uuid.UUID) (err error) {
 	return s.SaleRepository.Delete(ctx, id)
 }
+
+func (s *saleService) GetMonthlySalesReport(ctx context.Context, params *model.GetMonthlySalesReport) (model.MonthlySalesReport, error) {
+	return s.SaleRepository.GetMonthlySalesReport(ctx, params)
+}

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -93,4 +94,25 @@ func (h *SaleController) Delete(c echo.Context) error {
 	}
 
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil menghapus data penjualan", nil, nil)
+}
+
+func (h *SaleController) GetMonthlySalesReport(c echo.Context) error {
+	var (
+		ctx     = c.Request().Context()
+		payload = dto.GetMonthlySalesReport{}
+	)
+
+	if err := helper.BindRequest(c, &payload, true); err != nil {
+		return response.BuildErrorResponse(c, err)
+	}
+
+	fmt.Println("Month:", payload.Month)
+	fmt.Println("Year:", payload.Year)
+
+	data, err := h.Service.GetMonthlySalesReport(ctx, payload.ParseToModel())
+	if err != nil {
+		return response.BuildErrorResponse(c, err)
+	}
+
+	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil mendapatkan data penjualan", data, nil)
 }
