@@ -22,6 +22,15 @@ func NewPurchaseController(s service.PurchaseService) *PurchaseController {
 	}
 }
 
+// @Summary Get purchases
+// @Description Mendapatkan semua data pembelian
+// @Tags purchases
+// @Accept json
+// @Produce json
+// @Param data body dto.GetPurchaseRequest true "Purchase request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /purchases [get]
 func (h *PurchaseController) Get(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
@@ -49,12 +58,19 @@ func (h *PurchaseController) Get(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil mendapatkan data pembelian", data, meta)
 }
 
+// @Summary Create bulk purchase
+// @Description Buat data pembelian secara bulk maupun satu per satu
+// @Tags purchases
+// @Accept json
+// @Produce json
+// @Param data body dto.BulkPurchaseRequest true "Purchase request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /purchases [post]
 func (h *PurchaseController) CreateBulk(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
-		request struct {
-			Data []dto.StockBatchItem `json:"data"`
-		}
+		request dto.BulkPurchaseRequest
 	)
 
 	if err := helper.BindRequest(c, &request, false); err != nil {
@@ -83,6 +99,15 @@ func (h *PurchaseController) CreateBulk(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusCreated, "Berhasil menyimpan data pembelian", nil, nil)
 }
 
+// @Summary Update purchases
+// @Description Memperbarui data pembelian
+// @Tags purchases
+// @Accept json
+// @Produce json
+// @Param data body dto.StockBatchItem true "Purchase request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /purchases/:id [put]
 func (h *PurchaseController) Update(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
@@ -107,6 +132,15 @@ func (h *PurchaseController) Update(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil memperbarui data pembelian", nil, nil)
 }
 
+// @Summary Delete purchases
+// @Description Menghapus data pembelian berdasarkan id
+// @Tags purchases
+// @Accept json
+// @Produce json
+// @Param id path string true "ID Pembelian"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /purchases/:id [delete]
 func (h *PurchaseController) Delete(c echo.Context) error {
 	var (
 		ctx   = c.Request().Context()

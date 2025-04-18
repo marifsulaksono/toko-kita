@@ -18,6 +18,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// @title TokoKita API
+// @version 1.0
+// @description Backend untuk sistem penjualan FIFO
+
+// @host localhost:8080
+// @BasePath /
+
+// @securityDefinitions.basic BasicAuth
 func main() {
 	var (
 		ctx       = context.Background()

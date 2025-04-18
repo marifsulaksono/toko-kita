@@ -12,6 +12,10 @@ type (
 		StartDate  string `json:"start_date" query:"start_date" validate:"datetime=2006-01-02"`
 		EndDate    string `json:"end_date" query:"end_date" validate:"datetime=2006-01-02"`
 	}
+
+	BulkPurchaseRequest struct {
+		Data []StockBatchItem `json:"data"`
+	}
 )
 
 func (u *GetPurchaseRequest) ParseToModel() *model.GetStockBatchRequest {

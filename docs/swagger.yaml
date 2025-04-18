@@ -1,0 +1,350 @@
+basePath: /
+definitions:
+  dto.BulkPurchaseRequest:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.StockBatchItem'
+        type: array
+    type: object
+  dto.GetMonthlySalesReport:
+    properties:
+      item_id:
+        type: string
+      month:
+        type: integer
+      year:
+        type: integer
+    type: object
+  dto.GetPurchaseRequest:
+    properties:
+      end_date:
+        type: string
+      item_id:
+        type: string
+      limit:
+        minimum: 1
+        type: integer
+      page:
+        minimum: 1
+        type: integer
+      search:
+        type: string
+      start_date:
+        type: string
+      supplier_id:
+        type: string
+    type: object
+  dto.GetSaleRequest:
+    properties:
+      end_date:
+        type: string
+      limit:
+        minimum: 1
+        type: integer
+      page:
+        minimum: 1
+        type: integer
+      search:
+        type: string
+      start_date:
+        type: string
+    type: object
+  dto.SaleRequest:
+    properties:
+      customer_name:
+        type: string
+      date:
+        type: string
+      sales_details:
+        items:
+          $ref: '#/definitions/dto.SalesDetail'
+        type: array
+    required:
+    - date
+    type: object
+  dto.SalesDetail:
+    properties:
+      item_id:
+        type: string
+      qty:
+        type: integer
+    required:
+    - item_id
+    - qty
+    type: object
+  dto.StockBatchItem:
+    properties:
+      batch_no:
+        maxLength: 50
+        type: string
+      item_id:
+        type: string
+      purchased_at:
+        type: string
+      purchased_price:
+        minimum: 0
+        type: number
+      purchased_qty:
+        minimum: 1
+        type: integer
+      remaining_qty:
+        minimum: 1
+        type: integer
+      supplier_id:
+        type: string
+    required:
+    - batch_no
+    - purchased_at
+    - purchased_price
+    - purchased_qty
+    - supplier_id
+    type: object
+  response.JSONResponse:
+    properties:
+      code:
+        type: string
+      data: {}
+      message:
+        type: string
+      metadata: {}
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Backend untuk sistem penjualan FIFO
+  title: TokoKita API
+  version: "1.0"
+paths:
+  /purchases:
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan semua data pembelian
+      parameters:
+      - description: Purchase request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetPurchaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Get purchases
+      tags:
+      - purchases
+    post:
+      consumes:
+      - application/json
+      description: Buat data pembelian secara bulk maupun satu per satu
+      parameters:
+      - description: Purchase request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BulkPurchaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Create bulk purchase
+      tags:
+      - purchases
+  /purchases/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data pembelian berdasarkan id
+      parameters:
+      - description: ID Pembelian
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Delete purchases
+      tags:
+      - purchases
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data pembelian
+      parameters:
+      - description: Purchase request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.StockBatchItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Update purchases
+      tags:
+      - purchases
+  /sales:
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan semua data penjualan
+      parameters:
+      - description: Sale request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetSaleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Get sales
+      tags:
+      - sales
+    post:
+      consumes:
+      - application/json
+      description: Buat transaksi penjualan menggunakan metode FIFO
+      parameters:
+      - description: Sale request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SaleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Create sale
+      tags:
+      - sales
+  /sales/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data penjualan berdasarkan id
+      parameters:
+      - description: ID Penjualan
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Delete sale
+      tags:
+      - sales
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan data penjualan berdasarkan id
+      parameters:
+      - description: ID Penjualan
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Get sale by id
+      tags:
+      - sales
+  /sales/report:
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan data laporan total penjualan, total HPP, dan total
+        profit
+      parameters:
+      - description: Sale request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetMonthlySalesReport'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONResponse'
+      summary: Get monthly sales report
+      tags:
+      - sales
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

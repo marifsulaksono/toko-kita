@@ -22,6 +22,15 @@ func NewSaleController(s service.SaleService) *SaleController {
 	}
 }
 
+// @Summary Get sales
+// @Description Mendapatkan semua data penjualan
+// @Tags sales
+// @Accept json
+// @Produce json
+// @Param data body dto.GetSaleRequest true "Sale request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /sales [get]
 func (h *SaleController) Get(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
@@ -48,6 +57,15 @@ func (h *SaleController) Get(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil mendapatkan data penjualan", data, meta)
 }
 
+// @Summary Get sale by id
+// @Description Mendapatkan data penjualan berdasarkan id
+// @Tags sales
+// @Accept json
+// @Produce json
+// @Param id path string true "ID Penjualan"
+// @Success 200 {object} response.JSONResponse
+// @Failure 404 {object} response.JSONResponse
+// @Router /sales/:id [get]
 func (s *SaleController) GetById(c echo.Context) error {
 	var (
 		ctx   = c.Request().Context()
@@ -61,6 +79,15 @@ func (s *SaleController) GetById(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil mendapatkan data penjualan", data, nil)
 }
 
+// @Summary Create sale
+// @Description Buat transaksi penjualan menggunakan metode FIFO
+// @Tags sales
+// @Accept json
+// @Produce json
+// @Param data body dto.SaleRequest true "Sale request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /sales [post]
 func (h *SaleController) Create(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
@@ -83,6 +110,15 @@ func (h *SaleController) Create(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusCreated, "Berhasil menyimpan data penjualan", nil, nil)
 }
 
+// @Summary Delete sale
+// @Description Menghapus data penjualan berdasarkan id
+// @Tags sales
+// @Accept json
+// @Produce json
+// @Param id path string true "ID Penjualan"
+// @Success 200 {object} response.JSONResponse
+// @Failure 404 {object} response.JSONResponse
+// @Router /sales/:id [delete]
 func (h *SaleController) Delete(c echo.Context) error {
 	var (
 		ctx   = c.Request().Context()
@@ -96,6 +132,15 @@ func (h *SaleController) Delete(c echo.Context) error {
 	return response.BuildSuccessResponse(c, http.StatusOK, "Berhasil menghapus data penjualan", nil, nil)
 }
 
+// @Summary Get monthly sales report
+// @Description Mendapatkan data laporan total penjualan, total HPP, dan total profit
+// @Tags sales
+// @Accept json
+// @Produce json
+// @Param data body dto.GetMonthlySalesReport true "Sale request"
+// @Success 200 {object} response.JSONResponse
+// @Failure 400 {object} response.JSONResponse
+// @Router /sales/report [get]
 func (h *SaleController) GetMonthlySalesReport(c echo.Context) error {
 	var (
 		ctx     = c.Request().Context()
