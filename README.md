@@ -1,93 +1,46 @@
-# Go Boilerplate
+# 🏪 TokoKita - Backend FIFO Inventory & Sales Management
 
-A clean architecture scalable and maintainable Go boilerplate project using Echo, JWT, GORM, Redis, and more.
+Sistem backend REST API untuk mengelola pembelian, penjualan, dan laporan laba menggunakan metode FIFO berbasis Golang + PostgreSQL.
 
-## Table of Contents
+---
 
-* [Overview](#overview)
-* [Tech Stack](#tech-stack)
-* [Getting Started](#getting-started)
-* [Installation](#installation)
-* [Running the Project](#running-the-project)
-* [Contact](#contact)
+## 🚀 Instruksi Menjalankan Server
+### Persiapan Awal
+1. Clone repository ini
+2. Copy file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database
 
-## Overview
-
-This project is a boilerplate template that provides a basic structure with a clean architecture implementation for building scalable and maintainable Go applications. It includes features such as authentication using JWT, database interaction using GORM, and temporary storage using Redis.
-
-You can use this repository for your template project by click [use this template](https://github.com/new?template_name=go-boilerplate&template_owner=marifsulaksono)
-
-## Tech Stack
-
-* Go 1.23 (See [installation](https://go.dev/doc/install))
-* Echo V4 (See [documentation](https://echo.labstack.com/docs))
-* JWT V5 (See [documentation]([https://echo.labstack.com/docs](https://pkg.go.dev/github.com/golang-jwt/jwt/v5)))
-* Postgres/MySQL/SQLServer (See installation of [MySQL](https://dev.mysql.com/doc/mysql-getting-started/en/) | [Postgresql](https://www.postgresql.org/docs/current/tutorial-install.html) | [SQL Server](https://learn.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server?view=sql-server-ver16))
-* GORM (See [documentation](https://gorm.io/docs/))
-* Redis (See [documentation](https://redis.io/docs/latest/develop/))
-* Viper (See [documentation](https://pkg.go.dev/github.com/dvln/viper))
-* Logrus (See [documentation](https://pkg.go.dev/github.com/sirupsen/logrus))
-
-## Folder Structure
-```
-go-echo-boilerplate/  
-├── cmd/                 # Entry point for the application  
-│   └── api/             # REST API starter  
-├── internal/            # Internal application logic  
-│   ├── api/             # REST API core logic  
-│   │   ├── controller/  # Handles request & response processing  
-│   │   ├── dto/         # Data transfer objects (request & response)  
-│   │   ├── middleware/  # Custom middleware implementations  
-│   │   ├── routes/      # API route definitions  
-│   ├── config/          # Configuration & dependency injection  
-│   ├── constants/       # Global constant variables  
-│   ├── contract/        # Dependency injection contracts  
-│   │   ├── common/      # Third-party dependencies  
-│   │   ├── repository/  # Repository layer contracts  
-│   │   └── service/     # Service layer contracts  
-│   ├── migrations/      # Database migration files  
-│   ├── model/           # Database models/entities  
-│   ├── pkg/             # Utility functions & helpers  
-│   ├── repository/      # Data access layer  
-│   │   ├── interfaces/  # Repository interface definitions  
-│   └── service/         # Business logic layer  
-│   │   ├── interfaces/  # Service interface definitions  
-├── logs/                # Application log files  
-├── pkg/                 # Shared utilities  
-└── .env                 # Environment variables
+```bash
+cp .env.example .env
 ```
 
-## Getting Started
+3. Buat database PostgreSQL sesuai konfigurasi .env
+4. Jalankan seeder untuk membuat akun super admin:
+- jika menggunakan make: ```make run-seed```
+- jika tidak menggunakan make: ```go run cmd/api/main.go --seed```
+5. Jalankan server API:
+- jika menggunakan make: ```make run-api```
+- jika tidak menggunakan make: ```go run cmd/api/main.go```
 
-### Installation
+### Setup Database
+Pastikan PostgreSQL sudah berjalan dan environment di .env sudah sesuai. Contoh variabel penting:
+```bash
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=tokokita_db
+```
 
-To install this project, clone the repository from GitHub:
+### Testing Endpoint
+Gunakan dokumentasi Postman berikut untuk mencoba semua endpoint API: [👉 Dokumentasi Postman](https://documenter.getpostman.com/view/30332593/2sB2cd5JDR)
 
-* `git clone https://github.com/marifsulaksono/go-boilerplate.git`
-* Copy file `.env.example` and rename to `.env`
-  ```sh
-  cp .env.example .env
-  ```
-* Adjust variable `.env` file according to the configuration in your local environment
+### Tech & Stack
+- Go 1.21+
+- PostgreSQL
+- GORM
+- JWT
+- Redis
+- Makefile untuk kemudahan dev (opsional)
 
-### Running the Project
-
-To run the project, use one of the following commands:
-
-* `make run-api` (using Makefile)
-* `go run cmd/api/main.go` (without Makefile)
-
-### Using Docker
-
-To build and run the project using Docker, use one of the following commands:
-
-* `docker build -t go-boilerplate:1.0` (using Dockerfile)
-* `docker compose up --build` (using Docker Compose)
-
-## Contact
-----------
-
-For more information or to report issues, please contact me at:
-
-* [LinkedIn](https://www.linkedin.com/in/marifsulaksono/)
-* [Email](mailto:marifsulaksono@gmail.com)
+### More Information
+Contact me: [marifsulaksono@gmail.com](mailto:marifsulaksono@gmail.com)
