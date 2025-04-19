@@ -42,22 +42,18 @@ USER_PASSWORD_SEEDER="Password123"
 ```
 
 ### Database Design
-- Entity Relation Diagram
-
-![ERD](https://drive.google.com/file/d/1hXQoQ-dWClWyUUfDAf0aR6wTgRD3oyxs/view?usp=sharing)
+- Entity Relation Diagram.
+https://drive.google.com/file/d/1hXQoQ-dWClWyUUfDAf0aR6wTgRD3oyxs/view?usp=sharing
 
 ### Flow Bussiness
 - Alur proses FIFO saat penjualan.
-
-![Diagram Alur proses FIFO saat penjualan](https://drive.google.com/file/d/1G30LYELVy49X-3OoGg4isV0YmOv5VACu/view?usp=sharing)
+https://drive.google.com/file/d/1G30LYELVy49X-3OoGg4isV0YmOv5VACu/view?usp=sharing
 
 - Alur proses pencatatan pembelian dan penjualan.
-
-![Diagram Alur proses pencatatan pembelian dan penjualan](https://drive.google.com/file/d/1LZC1eZY5rX7RbSwC8seDlFHC3WLmDqoW/view?usp=sharing)
+https://drive.google.com/file/d/1LZC1eZY5rX7RbSwC8seDlFHC3WLmDqoW/view?usp=sharing
 
 - Mekanisme pembuatan laporan laba bulanan.
-
-![Diagram Mekanisme pembuatan laporan laba bulanan](https://drive.google.com/file/d/1WC7_hZ8EEiUemvJDlsXGgVFpIimzeGpk/view?usp=sharing)
+https://drive.google.com/file/d/1WC7_hZ8EEiUemvJDlsXGgVFpIimzeGpk/view?usp=sharing
 
 ### Testing Endpoint
 Gunakan dokumentasi Postman berikut untuk mencoba semua endpoint API: [👉 Dokumentasi Postman](https://documenter.getpostman.com/view/30332593/2sB2cd5JDR)
