@@ -25,7 +25,7 @@ func NewRepository(ctx context.Context, common *common.Contract) (*Contract, err
 	supplier := repository.NewSupplierRepository(common.DB)
 	item := repository.NewItemRepository(common.DB)
 	stockBatch := repository.NewStockBatchRepository(common.DB)
-	sale := repository.NewSaleRepository(common.DB)
+	sale := repository.NewSaleRepository(common.DB, common.Redis)
 
 	return &Contract{
 		User:       user,

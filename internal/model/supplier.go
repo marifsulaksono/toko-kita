@@ -10,6 +10,8 @@ type (
 		Page   int    `json:"page"`
 		Limit  int    `json:"limit"`
 		Search string `json:"search"`
+		Sort   string `json:"sort"`
+		Order  string `json:"order"`
 	}
 
 	Supplier struct {

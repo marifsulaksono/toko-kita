@@ -2,24 +2,34 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/model"
+	"github.com/marifsulaksono/go-echo-boilerplate/internal/pkg/helper"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/pkg/utils/response"
 	"github.com/marifsulaksono/go-echo-boilerplate/internal/repository/interfaces"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
+var (
+	getSalesDataKey = "get-sales-data"
+)
+
 type saleRepository struct {
-	DB *gorm.DB
+	DB  *gorm.DB
+	rdb *redis.Client
 }
 
-func NewSaleRepository(db *gorm.DB) interfaces.SaleRepository {
+func NewSaleRepository(db *gorm.DB, rdb *redis.Client) interfaces.SaleRepository {
 	return &saleRepository{
-		DB: db,
+		DB:  db,
+		rdb: rdb,
 	}
 }
 
@@ -69,6 +79,19 @@ func (r *saleRepository) Get(ctx context.Context, params *model.GetSaleRequest) 
 }
 
 func (r *saleRepository) GetByID(ctx context.Context, id uuid.UUID) (data *model.Sale, err error) {
+	redisKey := fmt.Sprintf("%s:%s", getSalesDataKey, id.String())
+	cachedSalesID, err := r.rdb.Get(ctx, redisKey).Result()
+	if err == nil {
+		if err = json.Unmarshal([]byte(cachedSalesID), &data); err != nil {
+			log.Printf("Error unmarshaling user data from Redis: %v", err)
+		} else {
+			fmt.Println("get data from redis")
+			return data, nil
+		}
+	} else if err != redis.Nil {
+		log.Printf("Error fetching user data from Redis: %v", err)
+	}
+
 	db := r.DB.WithContext(ctx)
 
 	err = db.Where("id = ?", id).Preload("User").Preload("Details.Item").
@@ -76,6 +99,12 @@ func (r *saleRepository) GetByID(ctx context.Context, id uuid.UUID) (data *model
 		First(&data).Error
 	if err != nil {
 		return nil, err
+	}
+	fmt.Println("get data from database")
+
+	err = helper.SetRedisJSONCache(ctx, r.rdb, redisKey, data, time.Duration(300)*time.Second)
+	if err != nil {
+		log.Printf("Error setting user data in Redis: %v", err)
 	}
 
 	return

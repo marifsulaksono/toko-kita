@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -32,7 +33,7 @@ func (r *supplierRepository) Get(ctx context.Context, params *model.GetSupplierR
 		db = db.Where("name ILIKE ?", "%"+params.Search+"%")
 	}
 
-	err = db.Offset(offset).Limit(params.Limit).Find(&data).Error
+	err = db.Order(fmt.Sprintf("%s %s", params.Sort, params.Order)).Offset(offset).Limit(params.Limit).Find(&data).Error
 	if err != nil {
 		return nil, 0, err
 	}

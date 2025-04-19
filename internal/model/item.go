@@ -10,6 +10,8 @@ type (
 		Page   int    `json:"page"`
 		Limit  int    `json:"limit"`
 		Search string `json:"search"`
+		Sort   string `json:"sort"`
+		Order  string `json:"order"`
 	}
 
 	Item struct {
@@ -18,7 +20,7 @@ type (
 		Name            string           `json:"name" gorm:"type:varchar(255);not null"`
 		Unit            string           `json:"unit" gorm:"type:varchar(255);not null"`
 		SellingPrice    float64          `json:"selling_price" gorm:"not null"`
-		Stock           int              `json:"stock" gorm:"-:migration"`
+		Stock           int              `json:"stock" gorm:"-"`
 		StockBatchItems []StockBatchItem `json:"stock_batch_items,omitempty" gorm:"foreignKey:ItemID"`
 		Model
 	}

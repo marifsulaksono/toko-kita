@@ -16,13 +16,15 @@ type (
 		SupplierID string `json:"supplier_id"`
 		StartDate  string `json:"start_date"`
 		EndDate    string `json:"end_date"`
+		Sort       string `json:"sort"`
+		Order      string `json:"order"`
 	}
 
 	StockBatchItem struct {
 		ID             uuid.UUID `json:"id" gorm:"primaryKey;type:varchar(36)"`
 		ItemID         uuid.UUID `json:"item_id" gorm:"type:uuid;not null"`
 		Item           Item      `json:"-" gorm:"foreignKey:ItemID;references:ID"`
-		ItemName       string    `json:"item_name,omitempty" gorm:"-:migration"`
+		ItemName       string    `json:"item_name,omitempty" gorm:"-"`
 		SupplierID     uuid.UUID `json:"supplier_id" gorm:"type:uuid;not null"`
 		Supplier       Supplier  `json:"supplier" gorm:"foreignKey:SupplierID;references:ID"`
 		BatchNo        string    `json:"batch_no" gorm:"type:varchar(50);not null"`

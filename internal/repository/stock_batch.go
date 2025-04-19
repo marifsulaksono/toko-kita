@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -29,7 +30,10 @@ func (r *stockBatchRepository) Get(ctx context.Context, params *model.GetStockBa
 		offset = (params.Page - 1) * params.Limit
 	)
 
-	db := r.DB.WithContext(ctx)
+	db := r.DB.WithContext(ctx).
+		Joins("LEFT JOIN items ON items.id = stock_batch_items.item_id").
+		Joins("LEFT JOIN suppliers ON suppliers.id = stock_batch_items.supplier_id")
+
 	if params.ItemID != "" {
 		db = db.Where("item_id = ?", params.ItemID)
 	}
@@ -61,18 +65,31 @@ func (r *stockBatchRepository) Get(ctx context.Context, params *model.GetStockBa
 	}
 
 	if params.Search != "" {
-		db = db.Joins("LEFT JOIN items ON items.id = stock_batch_items.item_id").
-			Joins("LEFT JOIN suppliers ON suppliers.id = stock_batch_items.supplier_id").
-			Where("items.name ILIKE ? OR items.sku ILIKE ? OR suppliers.name ILIKE ?",
-				"%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%")
+		db = db.Where("items.name ILIKE ? OR items.sku ILIKE ? OR suppliers.name ILIKE ?",
+			"%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%")
 	}
 
-	err = db.Preload("Item").Preload("Supplier").Offset(offset).Limit(params.Limit).Order("purchased_at ASC").Find(&data).Error
+	sortMap := map[string]string{
+		"item":          "items.name",
+		"supplier":      "suppliers.name",
+		"batch_no":      "stock_batch_items.batch_no",
+		"purchased_qty": "stock_batch_items.purchased_qty",
+		"remaining_qty": "stock_batch_items.remaining_qty",
+		"purchased_at":  "stock_batch_items.purchased_at",
+	}
+
+	sortColumn, ok := sortMap[params.Sort]
+	if !ok {
+		sortColumn = "stock_batch_items.purchased_at" // default sorting column
+	}
+
+	err = db.Order(fmt.Sprintf("%s %s", sortColumn, params.Order)).Preload("Item").Preload("Supplier").Offset(offset).
+		Limit(params.Limit).Find(&data).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
-	err = r.DB.Model(&model.StockBatchItem{}).Where("deleted_at IS NULL").Count(&total).Error
+	err = db.Session(&gorm.Session{}).Model(&model.StockBatchItem{}).Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}

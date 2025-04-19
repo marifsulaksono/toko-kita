@@ -37,8 +37,13 @@ func (h *SupplierController) Get(c echo.Context) error {
 	if payload.Page == 0 {
 		payload.Page = 1
 	}
+	if payload.Sort == "" {
+		payload.Sort = "name"
+	}
+	if payload.Order == "" {
+		payload.Order = "asc"
+	}
 
-	// data, err := h.Service.Get(ctx)
 	data, total, err := h.Service.Get(ctx, payload.ParseToModel())
 	if err != nil {
 		return response.BuildErrorResponse(c, err)

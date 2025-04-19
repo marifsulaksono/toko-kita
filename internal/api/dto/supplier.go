@@ -7,6 +7,8 @@ type (
 		Page   int    `json:"page" query:"page" validate:"gte=1"`
 		Limit  int    `json:"limit" query:"limit" validate:"gte=1"`
 		Search string `json:"search" query:"search"`
+		Sort   string `json:"sort" query:"sort" validate:"omitempty,oneof=name phone_number created_at"`
+		Order  string `json:"order" query:"order" validate:"omitempty,oneof=asc desc"`
 	}
 
 	SupplierRequest struct {
@@ -21,6 +23,8 @@ func (u *GetSupplierRequest) ParseToModel() *model.GetSupplierRequest {
 		Page:   u.Page,
 		Limit:  u.Limit,
 		Search: u.Search,
+		Sort:   u.Sort,
+		Order:  u.Order,
 	}
 }
 

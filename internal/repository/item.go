@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -33,7 +34,7 @@ func (r *itemRepository) Get(ctx context.Context, params *model.GetItemRequest) 
 		db = db.Where("name ILIKE ? OR sku ILIKE ?", "%"+params.Search+"%", "%"+params.Search+"%")
 	}
 
-	err = db.Offset(offset).Limit(params.Limit).Find(&data).Error
+	err = db.Order(fmt.Sprintf("%s %s", params.Sort, params.Order)).Offset(offset).Limit(params.Limit).Find(&data).Error
 	if err != nil {
 		return nil, 0, err
 	}

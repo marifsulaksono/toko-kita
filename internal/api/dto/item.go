@@ -9,6 +9,8 @@ type (
 		Page   int    `json:"page" query:"page" validate:"gte=1"`
 		Limit  int    `json:"limit" query:"limit" validate:"gte=1"`
 		Search string `json:"search" query:"search"`
+		Sort   string `json:"sort" query:"sort" validate:"omitempty,oneof=name sku unit selling_price created_at"`
+		Order  string `json:"order" query:"order" validate:"omitempty,oneof=asc desc"`
 	}
 
 	CreateItemRequest struct {
@@ -32,6 +34,8 @@ func (u *GetItemRequest) ParseToModel() *model.GetItemRequest {
 		Page:   u.Page,
 		Limit:  u.Limit,
 		Search: u.Search,
+		Sort:   u.Sort,
+		Order:  u.Order,
 	}
 }
 
